@@ -26,11 +26,6 @@ namespace G1ANT.Addon.Net
         {
             messageSummary = summary;
             Folder = folder;
-
-            if (messageSummary != null)
-            {
-                FullMessage = Folder.GetMessage(messageSummary.UniqueId);
-            }
         }
 
         protected SimplifiedMessageSummary(MimeMessage message)
@@ -127,20 +122,20 @@ namespace G1ANT.Addon.Net
         {
             get
             {
-                if (fullMessage != null)
-                {
-                    if (fullMessage.MessageId == null)
-                    {
-                        if (fullMessage?.Headers != null && fullMessage.Headers.Contains(HeaderId.MessageId))
-                            return fullMessage.Headers[HeaderId.MessageId];
-                        else return string.Empty;
-                    }
-                    else    
-                        return fullMessage.MessageId;
-                }
-                else if (messageSummary != null)
-                    return messageSummary.Envelope.MessageId;
-                return string.Empty;
+                if (messageSummary != null && !string.IsNullOrEmpty(messageSummary.Envelope.MessageId))
+					return messageSummary.Envelope.MessageId;
+				else if (FullMessage != null)
+					if (FullMessage.MessageId == null)
+					{
+						if (FullMessage?.Headers != null && FullMessage.Headers.Contains(HeaderId.MessageId))
+							return FullMessage.Headers[HeaderId.MessageId];
+						else
+							return string.Empty;
+					}
+					else
+						return FullMessage.MessageId;
+
+				return string.Empty;
             }
         }
 
