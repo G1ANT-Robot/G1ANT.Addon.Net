@@ -123,15 +123,13 @@ namespace G1ANT.Addon.Net
             get
             {
                 if (!string.IsNullOrEmpty(messageSummary?.Envelope?.MessageId))
-					return messageSummary.Envelope.MessageId;
-				else if (!string.IsNullOrEmpty(FullMessage?.MessageId)
+				    return messageSummary.Envelope.MessageId;
+			    else if (!string.IsNullOrEmpty(FullMessage?.MessageId)
                     return FullMessage.MessageId;
                 else if (FullMessage?.Headers != null && FullMessage.Headers.Contains(HeaderId.MessageId))
                     return FullMessage.Headers[HeaderId.MessageId];
                 else
-					return string.Empty;						
-
-				return string.Empty;
+				    return string.Empty;
             }
         }
 
