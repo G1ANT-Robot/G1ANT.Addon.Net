@@ -122,14 +122,17 @@ namespace G1ANT.Addon.Net
         {
             get
             {
+                if (!string.IsNullOrEmpty(fullMessage?.MessageId))
+                    return fullMessage.MessageId;
+                else if (fullMessage?.Headers != null && fullMessage.Headers.Contains(HeaderId.MessageId))
+                    return fullMessage.Headers[HeaderId.MessageId];
                 if (!string.IsNullOrEmpty(messageSummary?.Envelope?.MessageId))
                     return messageSummary.Envelope.MessageId;
-                else if (!string.IsNullOrEmpty(FullMessage?.MessageId)
-                    return FullMessage.MessageId;
-                else if (FullMessage?.Headers != null && FullMessage.Headers.Contains(HeaderId.MessageId))
-                    return FullMessage.Headers[HeaderId.MessageId];
+                if (messageSummary?.Headers != null && messageSummary.Headers.Contains(HeaderId.MessageId))
+                    return messageSummary.Headers[HeaderId.MessageId];
                 else
                     return string.Empty;
+                
             }
         }
 
