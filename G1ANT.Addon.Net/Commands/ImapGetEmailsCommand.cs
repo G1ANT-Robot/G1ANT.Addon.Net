@@ -108,7 +108,8 @@ namespace G1ANT.Addon.Net
             var options = MessageSummaryItems.All
                 | MessageSummaryItems.Body
                 | MessageSummaryItems.BodyStructure
-                | MessageSummaryItems.UniqueId;
+                | MessageSummaryItems.UniqueId
+                | MessageSummaryItems.Headers;
 
             var query = CreateSearchQuery(arguments);
             var uids = new UniqueIdSet(arguments.OrderDescendingByUid.Value ? MailKit.Search.SortOrder.Descending : MailKit.Search.SortOrder.Ascending);
