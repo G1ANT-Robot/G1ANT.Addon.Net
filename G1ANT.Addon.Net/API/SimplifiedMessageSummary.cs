@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using G1ANT.Addon.Net.Models;
 using MimeKit.Text;
 using System.Web.UI;
+using MailKit.Net.Smtp;
 
 namespace G1ANT.Addon.Net
 {
@@ -402,6 +403,11 @@ namespace G1ANT.Addon.Net
                 }
                 return writer.ToString();
             }
+        }
+
+        public void SaveToFile(string path)
+        {
+            FullMessage?.WriteTo(path);
         }
     }
 }

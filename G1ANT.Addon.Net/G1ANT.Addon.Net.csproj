@@ -100,6 +100,7 @@
     <Compile Include="Commands\ImapOpenExCommand.cs" />
     <Compile Include="Commands\ImapGetFoldersCommand.cs" />
     <Compile Include="Commands\ImapMoveToCommand.cs" />
+    <Compile Include="Commands\MailSaveCommand.cs" />
     <Compile Include="Commands\SmtpCloseCommand.cs" />
     <Compile Include="Commands\SmtpNewMessageCommand.cs" />
     <Compile Include="Commands\SmtpOpenExCommand.cs" />
