@@ -407,6 +407,8 @@ namespace G1ANT.Addon.Net
 
         public void SaveToFile(string path)
         {
+            if (!Path.HasExtension(path))
+                path = Path.ChangeExtension(path, ".eml");
             FullMessage?.WriteTo(path);
         }
     }
