@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using G1ANT.Addon.Net.Models;
 using System.Linq;
+using Org.BouncyCastle.Crypto;
+using System.Windows.Forms;
 
 namespace G1ANT.Addon.Net
 {
@@ -55,6 +57,18 @@ namespace G1ANT.Addon.Net
             return client.GetFolders(client.PersonalNamespaces.FirstOrDefault()).Select(x => x.FullName).ToList();
         }
 
+        public Dictionary<string, string> GetSpecialFolders()
+        {
+            ValidateConnection();
+            var result = new Dictionary<string, string>();
+            foreach (var eFolder in (SpecialFolder[]) Enum.GetValues(typeof(SpecialFolder)))
+            {
+                var folder = client.GetFolder(eFolder);
+                result.Add(eFolder.ToString(), folder.FullName);
+            }
+            return result;
+        }
+
         public void MoveMailTo(SimplifiedMessageSummary mail, string folderName)
         {
             ValidateConnection();
@@ -67,6 +81,17 @@ namespace G1ANT.Addon.Net
             destinationFolder.Open(FolderAccess.ReadWrite);
             originFolder.Open(FolderAccess.ReadWrite);
             originFolder.MoveTo(mail.UniqueId, destinationFolder);
+        }
+
+        public void AppendMailTo(SimplifiedMessageSummary mail, string folderName)
+        {
+            ValidateConnection();
+
+            var destinationFolder = client.GetFolder(folderName);
+            if (destinationFolder == null)
+                throw new NullReferenceException($"Destination folder {folderName} does not exist.");
+
+            destinationFolder.Append(mail.FullMessage, MessageFlags.Seen);
         }
 
         private void ValidateConnection()
