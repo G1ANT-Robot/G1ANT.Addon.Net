@@ -97,6 +97,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\TokenCacheHelper.cs" />
+    <Compile Include="Commands\ImapGetSpecialFoldersCommand.cs" />
+    <Compile Include="Commands\ImapAppendToCommand.cs" />
     <Compile Include="Commands\ImapOpenExCommand.cs" />
     <Compile Include="Commands\ImapGetFoldersCommand.cs" />
     <Compile Include="Commands\ImapMoveToCommand.cs" />
