@@ -7,6 +7,7 @@
 *    See License.txt file in the project root for full license information.
 *
 */
+using G1ANT.Addon.Net.API;
 using G1ANT.Addon.Net.Extensions;
 using G1ANT.Addon.Net.Models;
 using G1ANT.Language;

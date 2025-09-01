@@ -25,7 +25,11 @@ namespace G1ANT.Addon.Net.Commands
 
         public void Execute(Arguments arguments)
         {
-            arguments.Mail?.Value?.SaveToFile(arguments.Path?.Value);
+            var simplifiedMessgae = arguments.Mail.Value as SimplifiedMessageSummary;
+            if (simplifiedMessgae == null)
+                throw new ArgumentException("Message type is incompatible");
+
+            simplifiedMessgae?.SaveToFile(arguments.Path?.Value);
         }
     }
 }

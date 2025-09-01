@@ -7,20 +7,26 @@
 *    See License.txt file in the project root for full license information.
 *
 */
-using G1ANT.Language;
-using MimeKit;
-using System;
 
-namespace G1ANT.Addon.Net.Commands
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using G1ANT.Addon.Net.API;
+using G1ANT.Addon.Net.Models;
+using G1ANT.Language;
+using G1ANT.Language.Models;
+using MailKit;
+using MailKit.Search;
+using Microsoft.Graph;
+using MimeKit;
+
+namespace G1ANT.Addon.Net
 {
-    [Command(Name = "smtp.reply", Tooltip = "This command creates new reply message based on received message which can be modified and send using smtp.send command")]
-    public class SmtpReplyCommand : Command
+    [Command(Name = "msgraph.replymail", Tooltip = "Send mail messages created by newmail or reply commands.")]
+    public class GraphReplyMailCommand : Command
     {
         public class Arguments : CommandArguments
         {
-            [Argument(Required = true, Tooltip = "Sender's email address")]
-            public TextStructure From { get; set; }
-
             [Argument(Required = true, Tooltip = "Message to reply to")]
             public MailStructure Mail { get; set; }
 
@@ -34,20 +40,13 @@ namespace G1ANT.Addon.Net.Commands
             public VariableStructure Result { get; set; } = new VariableStructure("result");
         }
 
-        public SmtpReplyCommand(AbstractScripter scripter) : base(scripter)
+        public GraphReplyMailCommand(AbstractScripter scripter) : base(scripter)
         { }
 
         public void Execute(Arguments arguments)
         {
-            if (string.IsNullOrWhiteSpace(arguments.From?.Value))
-                throw new ArgumentException("From argument cannot be empty");
-            var reply = arguments.Mail.CreateReply(arguments.ReplyToAll.Value, arguments.SubjectPrefix.Value);
-            var simplifiedMessgae = reply.Value as SimplifiedMessageSummary;
-            if (simplifiedMessgae == null)
-                throw new ArgumentException("Message type is incompatible");
-            simplifiedMessgae.Sender = new MailboxAddress(arguments.From.Value);
-            simplifiedMessgae.From.Add(new MailboxAddress(arguments.From.Value));
-            Scripter.Variables.SetVariableValue(arguments.Result.Value, reply);
+            var replyMail = arguments.Mail.CreateReply(arguments.ReplyToAll.Value, arguments.SubjectPrefix.Value);
+            Scripter.Variables.SetVariableValue(arguments.Result.Value, replyMail);
         }
     }
 }

@@ -8,10 +8,11 @@ using G1ANT.Addon.Net.Models;
 using MimeKit.Text;
 using System.Web.UI;
 using MailKit.Net.Smtp;
+using G1ANT.Addon.Net.API;
 
 namespace G1ANT.Addon.Net
 {
-    public class SimplifiedMessageSummary
+    public class SimplifiedMessageSummary : ISimplifiedMessage
     {
         public IMailFolder Folder;
 
@@ -318,7 +319,7 @@ namespace G1ANT.Addon.Net
             }
         }
 
-        public SimplifiedMessageSummary CreateReply(bool replyToAll, string replyPrefix = "Re: ")
+        public ISimplifiedMessage CreateReply(bool replyToAll, string replyPrefix = "Re: ")
         {
             var message = FullMessage;
             var reply = new MimeMessage();

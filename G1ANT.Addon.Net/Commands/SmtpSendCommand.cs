@@ -28,7 +28,12 @@ namespace G1ANT.Addon.Net.Commands
 
         public void Execute(Arguments arguments)
         {
-            if (arguments.Mail?.Value?.FullMessage == null)
+            var simplifiedMessgae = arguments.Mail.Value as SimplifiedMessageSummary;
+            if (simplifiedMessgae == null)
+                throw new ArgumentException("Message type is incompatible");
+
+
+            if (simplifiedMessgae?.FullMessage == null)
                 throw new Exception("Mail is not defined or is empty");
 
             var client = SmtpManager.Instance.GetClient();
@@ -37,7 +42,7 @@ namespace G1ANT.Addon.Net.Commands
 
             if (client.IsConnected && client.IsAuthenticated)
             {
-                var message = arguments.Mail.Value.FullMessage;
+                var message = simplifiedMessgae.FullMessage;
                 RemoveEmptyMailboxes(message);
                 client.Send(message);      
             }

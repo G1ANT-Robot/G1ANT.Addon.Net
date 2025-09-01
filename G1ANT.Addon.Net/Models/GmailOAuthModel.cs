@@ -39,6 +39,8 @@ namespace G1ANT.Addon.Net.Models
                 CacheFolder = Path.Combine(AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName, "gmail-client-secrets");
         }
 
+        public string Name => Username;
+
         public void Authenticate(ImapClient client)
         {
             var token = Task.Run(async () => await GetAccessToken()).Result;
@@ -58,6 +60,12 @@ namespace G1ANT.Addon.Net.Models
                 ClientId = ClientId,
                 ClientSecret = ClientSecret
             };
+        }
+
+        public string GetToken()
+        {
+            var token = Task.Run(async () => await GetAccessToken()).Result;
+            return token;
         }
 
         private async Task<UserCredential> GetUserCredentials()
