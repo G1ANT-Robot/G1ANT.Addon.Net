@@ -37,7 +37,13 @@ namespace G1ANT.Addon.Net.API
             if (onlyUnreaded)
                 filters.Add("IsRead eq false");
             var userRequestBuilder = this.client.Users[this.userName];
-            var request = userRequestBuilder.MailFolders[folder].Messages.Request().Filter(string.Join(" and ", filters)).Top(limit).Skip(skip);
+            var folderRequest = userRequestBuilder.MailFolders.Request().Filter($"displayName eq '{folder}'");
+            var resultFolder = Task.Run(async () => await folderRequest.GetAsync());
+            var selFolder = resultFolder.Result.CurrentPage.FirstOrDefault();
+            if (selFolder == null)
+                throw new ApplicationException($"Cannot find folder {folder}");
+
+            var request = userRequestBuilder.MailFolders[selFolder.Id].Messages.Request().Filter(string.Join(" and ", filters)).Top(limit).Skip(skip);
             var result = Task.Run(async () => await request.GetAsync());
             return result.Result.Select(x => new GraphSimplifiedMessage(x, userRequestBuilder)).ToList();
         }

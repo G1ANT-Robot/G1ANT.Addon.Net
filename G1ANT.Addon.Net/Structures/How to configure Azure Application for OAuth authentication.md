@@ -35,6 +35,7 @@
 - Mail.Send
 - Mail.Send.Shared
 - MailboxSettings.Read
+- MailboxFolder.Read
 - openid
 - profile
 - User.Read
