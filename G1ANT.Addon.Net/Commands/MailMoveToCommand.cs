@@ -49,13 +49,17 @@ namespace G1ANT.Addon.Net
 
         public void Execute(Arguments arguments)
         {
+            var simplifiedMessgae = arguments.Mail.Value as SimplifiedMessageSummary;
+            if (simplifiedMessgae == null)
+                throw new ArgumentException("Message type is incompatible");
+
             SetCertificateValidationCallback(arguments.IgnoreCertificateErrors.Value);
 
             var client = CreateClient(arguments);
 
             ValidateArgumentsAndConnection(client, arguments);
 
-            var originFolder = client.GetFolder(arguments.Mail.Value.Folder.FullName);
+            var originFolder = client.GetFolder(simplifiedMessgae.Folder.FullName);
             var destinationFolder = client.GetFolder(arguments.Folder.Value);
 
             ValidateFolders(originFolder, destinationFolder);

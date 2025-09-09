@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
+using System;
 using System.Net;
 
 namespace G1ANT.Addon.Net.Models
@@ -16,6 +17,13 @@ namespace G1ANT.Addon.Net.Models
         {
             Username = username;
             Password = password;
+        }
+
+        public string Name => Username;
+
+        public string GetToken()
+        {
+            throw new NotImplementedException();
         }
 
         public void Authenticate(ImapClient client)

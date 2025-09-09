@@ -24,6 +24,7 @@ namespace G1ANT.Addon.Net.Models
         {
             { "imap",  "https://outlook.office.com/IMAP.AccessAsUser.All" },
             { "smtp",  "https://outlook.office.com/SMTP.Send" },
+            { "ms-graph-api",  "https://graph.microsoft.com/.default" },
             //{ "pop",  "https://outlook.office.com/POP.AccessAsUser.All" },
         };
 
@@ -33,6 +34,8 @@ namespace G1ANT.Addon.Net.Models
         public OfficeOAuthModel()
         {
         }
+
+        public string Name => Username;
 
         private IPublicClientApplication BuildPublicClientApplication()
         {
@@ -78,7 +81,7 @@ namespace G1ANT.Addon.Net.Models
             return await app.AcquireTokenInteractive(scopes).WithLoginHint(Username).ExecuteAsync();
         }
 
-        private string GetToken()
+        public string GetToken()
         {
             var task = Task.Run(async () => await GetCachedOAuthToken());
             Token = task.Result.AccessToken;

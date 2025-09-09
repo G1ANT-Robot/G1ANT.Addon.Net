@@ -4,11 +4,12 @@ using MimeKit;
 using G1ANT.Language;
 using System.Collections.Generic;
 using G1ANT.Addon.Net.Extensions;
+using G1ANT.Addon.Net.API;
 
 namespace G1ANT.Addon.Net
 {
     [Structure(Name = "mail", Priority = 10, Default = 0, AutoCreate = false, Tooltip = "This structure stores current information about a mail message, which was downloaded with the `mail.imap` command")]
-    public class MailStructure : StructureTyped<SimplifiedMessageSummary>
+    public class MailStructure : StructureTyped<ISimplifiedMessage>
     {
         private static class IndexNames
         {
@@ -32,7 +33,7 @@ namespace G1ANT.Addon.Net
         {
         }
 
-        public MailStructure(SimplifiedMessageSummary value, string format = "") :
+        public MailStructure(ISimplifiedMessage value, string format = "") :
             base(value, format)
         {
             Init();
@@ -162,7 +163,7 @@ namespace G1ANT.Addon.Net
             return Value.Subject;
         }
 
-        protected override SimplifiedMessageSummary Parse(string value, string format = null)
+        protected override ISimplifiedMessage Parse(string value, string format = null)
         {
             throw new NotImplementedException();
         }
