@@ -23,4 +23,20 @@
 5. Ensure that in**Mobile and desktop applications** > **Redirect URIs** url entered during creation ([**https://login.microsoftonline.com/common/oauth2/nativeclient**](https://login.microsoftonline.com/common/oauth2/nativeclient)) is selected  
    ![](https://lh6.googleusercontent.com/EQRE_atji6Rrmz-NQvIpVKAC2_wy-lO9k3bQFKTHSO8MJUKM9PYXRi7d9wOTwl5vbyAAGdU60yZoelBRJ425xHc6nT9ohyJVIo1ee9GOj_g3c4sC_40E9-ETEQ6Z-dg5SfJJK14)
 
-6. Select**Overview**,**Application (client) ID** and **Directory (tenant) ID** values are needed to authenticate **imap/smtp** **G1ANT** commands connection
+6. In the Api permission menu add following permisions and grant rights for your organization:
+
+- email
+- Mail.Read
+- Mail.Read.Shared
+- Mail.ReadBasic
+- Mail.ReadBasic.Shared
+- Mail.ReadWrite
+- Mail.ReadWrite.Shared
+- Mail.Send
+- Mail.Send.Shared
+- MailboxSettings.Read
+- openid
+- profile
+- User.Read
+
+7. Select**Overview**,**Application (client) ID** and **Directory (tenant) ID** values are needed to authenticate **imap/smtp** **G1ANT** commands connection
