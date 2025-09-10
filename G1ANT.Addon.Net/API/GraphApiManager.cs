@@ -31,15 +31,45 @@ namespace G1ANT.Addon.Net.API
             this.userName = userName;
         }
 
+        protected async Task<MailFolder> GetMailFolderByName(string folder, MailFolder parentFolder = null)
+        {
+            var folderItems = folder.Split('/').ToList();
+            if (folderItems.Count == 0 || string.IsNullOrEmpty(folderItems[0]))
+                return parentFolder;
+
+            folder = folderItems[0];
+            folderItems.RemoveAt(0);
+
+            MailFolder selFolder = null;
+            if (parentFolder != null)
+            {
+                var userRequestBuilder = this.client.Users[this.userName];
+                var folderRequest = userRequestBuilder.MailFolders[parentFolder.Id].ChildFolders.Request().Filter($"displayName eq '{folder}'");
+                var resultFolder = await folderRequest.GetAsync();
+                selFolder = resultFolder.CurrentPage.FirstOrDefault();
+            }
+            else
+            {
+                var userRequestBuilder = this.client.Users[this.userName];
+                var folderRequest = userRequestBuilder.MailFolders.Request().Filter($"displayName eq '{folder}'");
+                var resultFolder = await folderRequest.GetAsync();
+                selFolder = resultFolder.CurrentPage.FirstOrDefault();
+            }
+            if (selFolder == null)
+                return null;
+            if (folderItems.Count > 0)
+                return await GetMailFolderByName(string.Join("/", folderItems), selFolder);
+            return selFolder;
+        }
+
         public List<GraphSimplifiedMessage> GetMessages(string folder, int limit, int skip, bool onlyUnreaded = false)
         {
             var filters = new List<string>();
             if (onlyUnreaded)
                 filters.Add("IsRead eq false");
             var userRequestBuilder = this.client.Users[this.userName];
-            var folderRequest = userRequestBuilder.MailFolders.Request().Filter($"displayName eq '{folder}'");
-            var resultFolder = Task.Run(async () => await folderRequest.GetAsync());
-            var selFolder = resultFolder.Result.CurrentPage.FirstOrDefault();
+            var resultFolder = Task.Run(async () => await GetMailFolderByName(folder));
+            var selFolder = resultFolder.Result;
             if (selFolder == null)
                 throw new ApplicationException($"Cannot find folder {folder}");
 
@@ -48,7 +78,7 @@ namespace G1ANT.Addon.Net.API
             return result.Result.Select(x => new GraphSimplifiedMessage(x, userRequestBuilder)).ToList();
         }
 
-        public List<string> GetMailFolders()
+        public List<string> GetMailFolders(string folder = null)
         {
             var request = this.client.Users[this.userName].MailFolders.Request().Top(100);
             var result = Task.Run(async () => await request.GetAsync());
@@ -57,12 +87,11 @@ namespace G1ANT.Addon.Net.API
 
         public void MoveMailTo(GraphSimplifiedMessage message, string folder)
         {
-            var request = this.client.Users[this.userName].MailFolders.Request().Filter($"DisplayName eq '{folder}'");
-            var result = Task.Run(async () => await request.GetAsync());
-            if (result.Result.CurrentPage.Count == 0)
+            var result = Task.Run(async () => await GetMailFolderByName(folder));
+            if (result.Result == null)
                 throw new ApplicationException($"Folder {folder} doesn't exist");
 
-            var folderId = result.Result.CurrentPage[0].Id;
+            var folderId = result.Result.Id;
             var moveRequest = this.client.Users[this.userName].Messages[message.MessageId].Move(folderId).Request();
             Task.Run(async () => await moveRequest.PostAsync());
         }
