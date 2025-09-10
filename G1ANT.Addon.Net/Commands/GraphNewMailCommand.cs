@@ -10,7 +10,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using G1ANT.Addon.Net.API;
 using G1ANT.Addon.Net.Models;
 using G1ANT.Language;
@@ -55,6 +57,12 @@ namespace G1ANT.Addon.Net
 
         public void Execute(Arguments arguments)
         {
+            var attachments = new MessageAttachmentsCollectionPage();
+            if (arguments.Attachments != null)
+            {
+                foreach (var path in arguments.Attachments?.Value)
+                    attachments.Add(GraphApiManager.CreateAttachment(path.ToString()));
+            }
             var message = new Message
             {
                 Subject = arguments.Subject.Value,
@@ -66,6 +74,7 @@ namespace G1ANT.Addon.Net
                 ToRecipients = CreateRecipients(arguments.To),
                 CcRecipients = CreateRecipients(arguments.Cc),
                 BccRecipients = CreateRecipients(arguments.Bcc),
+                Attachments = attachments,
             };
             Scripter.Variables.SetVariableValue(arguments.Result.Value, new MailStructure(new GraphSimplifiedMessage(message, null)));
         }

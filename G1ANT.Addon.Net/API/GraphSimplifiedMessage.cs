@@ -6,6 +6,7 @@ using MimeKit;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace G1ANT.Addon.Net.API
             get => message.IsRead != true; 
             set
             {
-                if (!string.IsNullOrEmpty(MessageId))
+                if (!string.IsNullOrEmpty(message.Id))
                 {
                     message.IsRead = value;
                     if (requestBuilder != null)
@@ -47,7 +48,7 @@ namespace G1ANT.Addon.Net.API
             {
                 if (attachements == null)
                 {
-                    if (!string.IsNullOrEmpty(MessageId) && requestBuilder != null)
+                    if (!string.IsNullOrEmpty(message.Id) && requestBuilder != null)
                     {
                         var task = Task.Run(async () => await requestBuilder.Messages[message.Id].Attachments.Request().GetAsync());
                         var result = task.Result;
@@ -62,7 +63,7 @@ namespace G1ANT.Addon.Net.API
             set => throw new NotImplementedException(); 
         }
 
-        public string MessageId => message.Id;
+        public string MessageId => message.InternetMessageId;
 
         public UniqueId UniqueId => throw new NotImplementedException();
 
@@ -171,7 +172,7 @@ namespace G1ANT.Addon.Net.API
         {
             get
             {
-                if (string.IsNullOrEmpty(MessageId) && requestBuilder != null)
+                if (string.IsNullOrEmpty(message.Id) && requestBuilder != null)
                 {
                     var options = new List<Option>
                     {
@@ -189,7 +190,7 @@ namespace G1ANT.Addon.Net.API
 
         public ISimplifiedMessage CreateReply(bool replyToAll, string replyPrefix = "Re: ")
         {
-            if (string.IsNullOrEmpty(MessageId) || requestBuilder == null)
+            if (string.IsNullOrEmpty(message.Id) || requestBuilder == null)
                 throw new ApplicationException("Cannot reply to a new email");
 
             string replySubject = "";
@@ -209,6 +210,11 @@ namespace G1ANT.Addon.Net.API
                 responseTask = Task.Run(async () => await requestBuilder.Messages[message.Id].CreateReply(replyMessage).Request().PostAsync());
 
             return new GraphSimplifiedMessage(responseTask.Result, requestBuilder);
+        }
+
+        public void SaveToFile(string path)
+        {
+            throw new NotImplementedException();
         }
     }
 }
