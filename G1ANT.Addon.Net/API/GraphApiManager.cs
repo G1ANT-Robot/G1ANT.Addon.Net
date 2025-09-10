@@ -5,11 +5,13 @@ using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 
 namespace G1ANT.Addon.Net.API
@@ -62,11 +64,16 @@ namespace G1ANT.Addon.Net.API
             return selFolder;
         }
 
-        public List<GraphSimplifiedMessage> GetMessages(string folder, int limit, int skip, bool onlyUnreaded = false)
+        public List<GraphSimplifiedMessage> GetMessages(string folder, int limit, int skip, bool onlyUnreaded = false, string idContains = null, string subjectContains = null)
         {
             var filters = new List<string>();
             if (onlyUnreaded)
                 filters.Add("IsRead eq false");
+            if (!string.IsNullOrEmpty(idContains))
+                filters.Add($"contains(InternetMessageId, '{idContains}')");
+            if (!string.IsNullOrEmpty(subjectContains))
+                filters.Add($"contains(Subject, '{subjectContains}')");
+
             var userRequestBuilder = this.client.Users[this.userName];
             var resultFolder = Task.Run(async () => await GetMailFolderByName(folder));
             var selFolder = resultFolder.Result;
@@ -102,6 +109,22 @@ namespace G1ANT.Addon.Net.API
 
             var result = Task.Run(async () => await request.PostAsync());
             result.Wait();
+        }
+
+        public static FileAttachment CreateAttachment(string filePath)
+        {
+            var fileName = Path.GetFileName(filePath);
+            byte[] contentBytes = System.IO.File.ReadAllBytes(filePath);
+            string contentType = MimeMapping.GetMimeMapping(fileName);
+
+            return new FileAttachment
+            {
+                ODataType = "#microsoft.graph.fileAttachment",
+                ContentBytes = contentBytes,
+                ContentType = contentType,
+                ContentId = Guid.NewGuid().ToString(),
+                Name = fileName
+            };
         }
     }
 }

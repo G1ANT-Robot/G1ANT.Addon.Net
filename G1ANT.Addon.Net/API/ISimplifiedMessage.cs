@@ -27,5 +27,6 @@ namespace G1ANT.Addon.Net.API
         string TextBody { get; set; }
 
         ISimplifiedMessage CreateReply(bool replyToAll, string replyPrefix = "Re: ");
+        void SaveToFile(string path);
     }
 }

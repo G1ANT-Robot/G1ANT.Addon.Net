@@ -42,6 +42,12 @@ namespace G1ANT.Addon.Net
             [Argument(Tooltip = "Skips items in a result set")]
             public IntegerStructure Skip { get; set; } = new IntegerStructure(0);
 
+            [Argument(Required = false, Tooltip = "Messages which id contains text")]
+            public TextStructure IdContains { get; set; }
+
+            [Argument(Required = false, Tooltip = "Messages which subject contains text")]
+            public TextStructure SubjectContains { get; set; }
+
             [Argument(Required = false, Tooltip = "If set to `true`, only unread messages will be checked")]
             public BooleanStructure OnlyUnreadMessages { get; set; } = new BooleanStructure(false);
 
@@ -73,7 +79,9 @@ namespace G1ANT.Addon.Net
                 folder: arguments.Folder.Value,
                 limit: arguments.Count.Value,
                 skip: arguments.Skip.Value,
-                onlyUnreaded: arguments.OnlyUnreadMessages.Value
+                onlyUnreaded: arguments.OnlyUnreadMessages.Value,
+                idContains: arguments.IdContains?.Value,
+                subjectContains: arguments.SubjectContains?.Value
             );
 
             var messageList = new ListStructure();
