@@ -105,10 +105,18 @@ namespace G1ANT.Addon.Net.API
 
         public void SendMessage(GraphSimplifiedMessage message)
         {
-            var request = this.client.Users[this.userName].SendMail(message.Message, true).Request();
-
-            var result = Task.Run(async () => await request.PostAsync());
-            result.Wait();
+            if (message.Message.IsDraft == true && !string.IsNullOrEmpty(message.Message.Id))
+            {
+                var request = this.client.Users[this.userName].Messages[message.Message.Id].Send().Request();
+                var result = Task.Run(async () => await request.PostAsync());
+                result.Wait();
+            }
+            else
+            {
+                var request = this.client.Users[this.userName].SendMail(message.Message, true).Request();
+                var result = Task.Run(async () => await request.PostAsync());
+                result.Wait();
+            }
         }
 
         public static FileAttachment CreateAttachment(string filePath)

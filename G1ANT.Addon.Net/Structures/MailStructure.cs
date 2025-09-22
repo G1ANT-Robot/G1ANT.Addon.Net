@@ -121,19 +121,19 @@ namespace G1ANT.Addon.Net
                     }
                     break;
                 case IndexNames.To:
-                    Value.To.SetMailboxesFromStructure(structure, "To");
+                    Value.To = structure.CreateMailboxesFromStructure("To");
                     break;
                 case IndexNames.From:
-                    Value.From.SetMailboxesFromStructure(structure, "From");
+                    Value.From = structure.CreateMailboxesFromStructure("From");
                     break;
                 case IndexNames.Cc:
-                    Value.Cc.SetMailboxesFromStructure(structure, "Cc");
+                    Value.Cc = structure.CreateMailboxesFromStructure("Cc");
                     break;
                 case IndexNames.ReplyTo:
-                    Value.ReplyTo.SetMailboxesFromStructure(structure, "ReplyTo");
+                    Value.ReplyTo = structure.CreateMailboxesFromStructure("ReplyTo");
                     break;
                 case IndexNames.Bcc:
-                    Value.Bcc.SetMailboxesFromStructure(structure, "Bcc");
+                    Value.Bcc = structure.CreateMailboxesFromStructure("Bcc");
                     break;
                 case IndexNames.Body:
                     Value.TextBody = structure.ToString();

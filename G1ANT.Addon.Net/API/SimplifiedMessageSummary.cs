@@ -177,6 +177,20 @@ namespace G1ANT.Addon.Net
                     return messageSummary.Envelope.To;
                 return null;
             }
+            set
+            {
+
+                if (fullMessage != null)
+                {
+                    fullMessage.To.Clear();
+                    fullMessage.To.AddRange(value);
+                }
+                else if (messageSummary != null)
+                {
+                    messageSummary.Envelope.To.Clear();
+                    messageSummary.Envelope.To.AddRange(value);
+                }
+            }
         }
 
         public InternetAddressList From
@@ -188,6 +202,20 @@ namespace G1ANT.Addon.Net
                 else if (messageSummary != null)
                     return messageSummary.Envelope.From;
                 return null;
+            }
+            set
+            {
+
+                if (fullMessage != null)
+                {
+                    fullMessage.From.Clear();
+                    fullMessage.From.AddRange(value);
+                }
+                else if (messageSummary != null)
+                {
+                    messageSummary.Envelope.From.Clear();
+                    messageSummary.Envelope.From.AddRange(value);
+                }
             }
         }
 
@@ -212,6 +240,20 @@ namespace G1ANT.Addon.Net
                     return messageSummary.Envelope.Cc;
                 return null;
             }
+            set
+            {
+
+                if (fullMessage != null)
+                {
+                    fullMessage.Cc.Clear();
+                    fullMessage.Cc.AddRange(value);
+                }
+                else if (messageSummary != null)
+                {
+                    messageSummary.Envelope.Cc.Clear();
+                    messageSummary.Envelope.Cc.AddRange(value);
+                }
+            }
         }
 
         public InternetAddressList Bcc
@@ -224,6 +266,20 @@ namespace G1ANT.Addon.Net
                     return messageSummary.Envelope.Bcc;
                 return null;
             }
+            set
+            {
+
+                if (fullMessage != null)
+                {
+                    fullMessage.Bcc.Clear();
+                    fullMessage.Bcc.AddRange(value);
+                }
+                else if (messageSummary != null)
+                {
+                    messageSummary.Envelope.Bcc.Clear();
+                    messageSummary.Envelope.Bcc.AddRange(value);
+                }
+            }
         }
 
         public InternetAddressList ReplyTo
@@ -235,6 +291,20 @@ namespace G1ANT.Addon.Net
                 else if (messageSummary != null)
                     return messageSummary.Envelope.ReplyTo;
                 return null;
+            }
+            set
+            {
+
+                if (fullMessage != null)
+                {
+                    fullMessage.ReplyTo.Clear();
+                    fullMessage.ReplyTo.AddRange(value);
+                }
+                else if (messageSummary != null)
+                {
+                    messageSummary.Envelope.ReplyTo.Clear();
+                    messageSummary.Envelope.ReplyTo.AddRange(value);
+                }
             }
         }
 
