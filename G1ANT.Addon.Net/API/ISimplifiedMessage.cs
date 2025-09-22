@@ -15,11 +15,11 @@ namespace G1ANT.Addon.Net.API
         string MessageId { get; }
         UniqueId UniqueId { get; }
         string Subject { get; set; }
-        InternetAddressList To {  get; }
-        InternetAddressList From { get; }
-        InternetAddressList Cc { get; }
-        InternetAddressList Bcc { get; }
-        InternetAddressList ReplyTo { get; }
+        InternetAddressList To { get; set; }
+        InternetAddressList From { get; set; }
+        InternetAddressList Cc { get; set; }
+        InternetAddressList Bcc { get; set; }
+        InternetAddressList ReplyTo { get; set; }
         bool IsReply { get; }
         string Priority { get; set; }
         DateTimeOffset? Date {  get; set; }

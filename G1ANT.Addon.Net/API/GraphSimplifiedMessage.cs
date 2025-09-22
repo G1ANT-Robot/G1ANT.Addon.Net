@@ -35,7 +35,7 @@ namespace G1ANT.Addon.Net.API
             {
                 if (!string.IsNullOrEmpty(message.Id))
                 {
-                    message.IsRead = value;
+                    message.IsRead = !value;
                     if (requestBuilder != null)
                         Task.Run(async () => await requestBuilder.Messages[message.Id].Request().Select(x => x.IsRead).UpdateAsync(message));
                 }
@@ -69,11 +69,30 @@ namespace G1ANT.Addon.Net.API
 
         public string Subject 
         { 
-            get => message.Subject; 
-            set => message.Subject = value;
+            get => message.Subject;
+            set
+            {
+                message.Subject = value;
+                UpdateMessage(new[] { "Subject" });
+            }
         }
 
-        public InternetAddressList To => new InternetAddressList(message.ToRecipients.Select(address => new MailboxAddress(address.EmailAddress.Name, address.EmailAddress.Address)));
+        public InternetAddressList To
+        {
+            get => new InternetAddressList(message.ToRecipients.Select(address => new MailboxAddress(address.EmailAddress.Name, address.EmailAddress.Address)));
+            set
+            {
+                message.ToRecipients = value.Where(x => x is MailboxAddress).Cast<MailboxAddress>().Select(x => new Recipient()
+                {
+                    EmailAddress = new EmailAddress()
+                    {
+                        Address = x.Address,
+                        Name = x.Name,
+                    }
+                }).ToList();
+                UpdateMessage(new[] { "ToRecipients" });
+            }
+        }
 
         public InternetAddressList From
         {
@@ -87,6 +106,24 @@ namespace G1ANT.Addon.Net.API
                 else
                     return null;
             }
+            set
+            {
+                if (value.Count != 1)
+                    throw new ArgumentException("You can assign only one address to from property");
+                if (value.First() is MailboxAddress newVal)
+                {
+                    message.From = new Recipient()
+                    {
+                        EmailAddress = new EmailAddress()
+                        {
+                            Address = newVal.Address,
+                            Name = newVal.Name,
+                        }
+                    };
+                }
+                UpdateMessage(new[] { "From" });
+            }
+
         }
 
         public InternetAddressList Cc
@@ -97,6 +134,18 @@ namespace G1ANT.Addon.Net.API
                     return new InternetAddressList(message.CcRecipients.Select(address => new MailboxAddress(address.EmailAddress.Name, address.EmailAddress.Address)));
                 else
                     return null;
+            }
+            set
+            {
+                message.CcRecipients = value.Where(x => x is MailboxAddress).Cast<MailboxAddress>().Select(x => new Recipient()
+                {
+                    EmailAddress = new EmailAddress()
+                    {
+                        Address = x.Address,
+                        Name = x.Name,
+                    }
+                }).ToList();
+                UpdateMessage(new[] { "CcRecipients" });
             }
         }
 
@@ -109,6 +158,18 @@ namespace G1ANT.Addon.Net.API
                 else
                     return null;
             }
+            set
+            {
+                message.BccRecipients = value.Where(x => x is MailboxAddress).Cast<MailboxAddress>().Select(x => new Recipient()
+                {
+                    EmailAddress = new EmailAddress()
+                    {
+                        Address = x.Address,
+                        Name = x.Name,
+                    }
+                }).ToList();
+                UpdateMessage(new[] { "BccRecipients" });
+            }
         }
 
         public InternetAddressList ReplyTo
@@ -119,6 +180,18 @@ namespace G1ANT.Addon.Net.API
                     return new InternetAddressList(message.ReplyTo.Select(address => new MailboxAddress(address.EmailAddress.Name, address.EmailAddress.Address)));
                 else
                     return null;
+            }
+            set
+            {
+                message.ReplyTo = value.Where(x => x is MailboxAddress).Cast<MailboxAddress>().Select(x => new Recipient()
+                {
+                    EmailAddress = new EmailAddress()
+                    {
+                        Address = x.Address,
+                        Name = x.Name,
+                    }
+                }).ToList();
+                UpdateMessage(new[] { "ReplyTo" });
             }
         }
 
@@ -153,6 +226,7 @@ namespace G1ANT.Addon.Net.API
                         message.Importance = Importance.Low;
                         break;
                 }
+                UpdateMessage(new[] { "Importance" });
             }
         }
 
@@ -164,8 +238,12 @@ namespace G1ANT.Addon.Net.API
         
         public string HtmlBody 
         { 
-            get => message.Body.Content; 
-            set => message.Body.Content = value; 
+            get => message.Body.Content;
+            set
+            {
+                message.Body.Content = value;
+                UpdateMessage(new[] { "Body" });
+            }
         }
         
         public string TextBody 
@@ -185,7 +263,11 @@ namespace G1ANT.Addon.Net.API
                 }
                 return message.Body.Content;
             }
-            set => message.Body.Content = value; 
+            set
+            {
+                message.Body.Content = value;
+                UpdateMessage(new[] { "Body" });
+            }
         }
 
         public ISimplifiedMessage CreateReply(bool replyToAll, string replyPrefix = "Re: ")
@@ -210,6 +292,24 @@ namespace G1ANT.Addon.Net.API
                 responseTask = Task.Run(async () => await requestBuilder.Messages[message.Id].CreateReply(replyMessage).Request().PostAsync());
 
             return new GraphSimplifiedMessage(responseTask.Result, requestBuilder);
+        }
+
+        private void UpdateMessage(string[] properties)
+        {
+            if (message.IsDraft == true && !string.IsNullOrEmpty(message.Id))
+            {
+                var udpateMessage = new Message();
+
+                foreach (var property in properties)
+                {
+                    var val = message.GetType().GetProperty(property).GetValue(message, null);
+                    udpateMessage.GetType().GetProperty(property).SetValue(udpateMessage, val);
+                }
+
+                var request = requestBuilder.Messages[message.Id].Request();
+                var response = Task.Run(async () => await request.UpdateAsync(udpateMessage));
+                response.Wait();
+            }
         }
 
         public void SaveToFile(string path)
