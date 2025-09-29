@@ -99,8 +99,8 @@ namespace G1ANT.Addon.Net.API
                 throw new ApplicationException($"Folder {folder} doesn't exist");
 
             var folderId = result.Result.Id;
-            var moveRequest = this.client.Users[this.userName].Messages[message.MessageId].Move(folderId).Request();
-            Task.Run(async () => await moveRequest.PostAsync());
+            var moveRequest = this.client.Users[this.userName].Messages[message.Message.Id].Move(folderId).Request();
+            Task.Run(async () => await moveRequest.PostAsync()).Wait();
         }
 
         public void SendMessage(GraphSimplifiedMessage message)
