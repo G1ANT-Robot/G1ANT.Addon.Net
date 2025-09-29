@@ -35,9 +35,11 @@ namespace G1ANT.Addon.Net.API
             {
                 if (!string.IsNullOrEmpty(message.Id))
                 {
-                    message.IsRead = !value;
+                    var msg = new Message() { IsRead = !value };
                     if (requestBuilder != null)
-                        Task.Run(async () => await requestBuilder.Messages[message.Id].Request().Select(x => x.IsRead).UpdateAsync(message));
+                    {
+                        Task.Run(async () => await requestBuilder.Messages[message.Id].Request().Select(x => x.IsRead).UpdateAsync(msg)).Wait();
+                    }
                 }
             }
         }
