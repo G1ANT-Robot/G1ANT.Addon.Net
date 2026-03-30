@@ -19,6 +19,9 @@ namespace G1ANT.Addon.Net.Commands
         {
             [Argument(Required = false, Tooltip = "Name of a list variable where the returned folders will be stored")]
             public VariableStructure Result { get; set; } = new VariableStructure("result");
+
+            [Argument(Required = false, Tooltip = "Folder name")]
+            public TextStructure Folder { get; set; }
         }
 
         public ImapGetFoldersCommand(AbstractScripter scripter) : base(scripter)
@@ -26,7 +29,7 @@ namespace G1ANT.Addon.Net.Commands
 
         public void Execute(Arguments arguments)
         {
-            var folders = ImapManager.Instance.GetPersonalFolders();
+            var folders = ImapManager.Instance.GetPersonalFolders(arguments.Folder?.Value);
             var result = new ListStructure(folders.ToList<object>(), "", Scripter);
             Scripter.Variables.SetVariableValue(arguments.Result.Value, result);
         }

@@ -25,7 +25,7 @@ namespace G1ANT.Addon.Net.Commands
 
         public void Execute(Arguments arguments)
         {
-            arguments.Mail?.Value?.SaveToFile(arguments.Path?.Value);
+            arguments.Mail.Value?.SaveToFile(arguments.Path?.Value);
         }
     }
 }

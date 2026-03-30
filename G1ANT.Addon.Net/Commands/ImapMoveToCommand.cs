@@ -30,7 +30,11 @@ namespace G1ANT.Addon.Net.Commands
 
         public void Execute(Arguments arguments)
         {
-            ImapManager.Instance.MoveMailTo(arguments.Mail.Value, arguments.Folder.Value);
+            var simplifiedMessgae = arguments.Mail.Value as SimplifiedMessageSummary;
+            if (simplifiedMessgae == null)
+                throw new ArgumentException("Message type is incompatible");
+
+            ImapManager.Instance.MoveMailTo(simplifiedMessgae, arguments.Folder.Value);
         }
     }
 }

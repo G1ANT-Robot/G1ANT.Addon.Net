@@ -51,10 +51,19 @@ namespace G1ANT.Addon.Net
                 ConnectClient(client);
         }
 
-        public List<string> GetPersonalFolders()
+        public List<string> GetPersonalFolders(string folder = null)
         {
             ValidateConnection();
-            return client.GetFolders(client.PersonalNamespaces.FirstOrDefault()).Select(x => x.FullName).ToList();
+            FolderNamespace folderNamespace = null;
+            if (!string.IsNullOrEmpty(folder))
+            {
+                folderNamespace = client.PersonalNamespaces.FirstOrDefault(x => x.Path == folder);
+                if (folderNamespace == null)
+                    folderNamespace = client.SharedNamespaces.FirstOrDefault(x => x.Path == folder);
+            }
+            if (folderNamespace == null)
+                folderNamespace = client.PersonalNamespaces.FirstOrDefault();
+            return client.GetFolders(folderNamespace).Select(x => x.FullName).ToList();
         }
 
         public Dictionary<string, string> GetSpecialFolders()

@@ -13,6 +13,7 @@ namespace G1ANT.Addon.Net.Wizards
     {
         private const string c_scopeImap = "imap";
         private const string c_scopeSmtp = "smtp";
+        private const string c_scopeMsGraphApi = "ms-graph-api";
         private IMainForm mainForm;
         private Structure[] supportedStructures = new Structure[] { new OfficeOAuthStructure(""), new GMailOAuthStructure("") };
 
@@ -153,7 +154,7 @@ namespace G1ANT.Addon.Net.Wizards
                 CreateCheckedListInfo(
                     officeStructure,
                     OfficeOAuthStructure.IndexNames.Scope,
-                    new[] { c_scopeImap, c_scopeSmtp }));
+                    new[] { c_scopeImap, c_scopeSmtp, c_scopeMsGraphApi }));
         }
 
         private void FillFormControls(GMailOAuthStructure gmailStructure)
