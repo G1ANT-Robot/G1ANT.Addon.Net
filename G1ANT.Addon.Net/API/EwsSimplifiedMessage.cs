@@ -82,7 +82,14 @@ namespace G1ANT.Addon.Net.API
                 // Mapowanie załączników EWS na model oczekiwany przez G1ANT
                 return attachments.Select(x => new AttachmentStructure(new EwsAttachmentModel(x))).ToList<object>();
             }
-            set => throw new NotImplementedException();
+            set {
+                message.Attachments.Clear();
+                foreach (var attachment in value)
+                {
+                    message.Attachments.AddFileAttachment(attachment.ToString());
+                }
+                UpdateMessage();
+            }
         }
 
         public string MessageId => message.InternetMessageId;
