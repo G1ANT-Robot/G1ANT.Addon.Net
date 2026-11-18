@@ -259,3 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/G1ANT.Addon.Net/Microsoft.Exchange.WebServices.Auth.dll
+/G1ANT.Addon.Net/Microsoft.Exchange.WebServices.dll

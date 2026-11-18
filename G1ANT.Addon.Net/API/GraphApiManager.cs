@@ -12,7 +12,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using System.Windows.Forms;
 
 namespace G1ANT.Addon.Net.API
 {

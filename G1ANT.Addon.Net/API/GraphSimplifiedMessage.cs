@@ -316,7 +316,32 @@ namespace G1ANT.Addon.Net.API
 
         public void SaveToFile(string path)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(message.Id) || requestBuilder == null)
+                throw new ApplicationException("Nie można zapisać nowej lub niezapisanej wiadomości do pliku.");
+
+            Task.Run(async () =>
+            {
+                var messageRequest = requestBuilder.Messages[message.Id].Request();
+                var httpRequestMessage = messageRequest.GetHttpRequestMessage();
+
+                // 2. Podmieniamy URL kończąc go segmentem /$value, aby pobrać format EML/MIME
+                httpRequestMessage.RequestUri = new Uri(httpRequestMessage.RequestUri.OriginalString.TrimEnd('/') + "/$value");
+
+                // 3. Pobieramy instancję klienta z requestBuilder i wysyłamy żądanie przez HttpProvider
+                var graphClient = requestBuilder.Client;
+                var response = await graphClient.HttpProvider.SendAsync(httpRequestMessage);
+
+                response.EnsureSuccessStatusCode();
+
+                // 4. Zapisujemy strumień odpowiedzi bezpośrednio do pliku .eml
+                using (var contentStream = await response.Content.ReadAsStreamAsync())
+                {
+                    using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                    {
+                        await contentStream.CopyToAsync(fileStream);
+                    }
+                }
+            }).Wait();
         }
     }
 }

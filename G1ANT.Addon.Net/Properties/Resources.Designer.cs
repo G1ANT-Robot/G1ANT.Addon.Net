@@ -19,10 +19,10 @@ namespace G1ANT.Addon.Net.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace G1ANT.Addon.Net.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("G1ANT.Addon.Net.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace G1ANT.Addon.Net.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,29 @@ namespace G1ANT.Addon.Net.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Microsoft_Exchange_WebServices {
+            get {
+                object obj = ResourceManager.GetObject("Microsoft.Exchange.WebServices", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Microsoft_Exchange_WebServices_Auth {
+            get {
+                object obj = ResourceManager.GetObject("Microsoft_Exchange_WebServices_Auth", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap neticon {
+        public static System.Drawing.Bitmap neticon {
             get {
                 object obj = ResourceManager.GetObject("neticon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -73,7 +93,7 @@ namespace G1ANT.Addon.Net.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] putty {
+        public static byte[] putty {
             get {
                 object obj = ResourceManager.GetObject("putty", resourceCulture);
                 return ((byte[])(obj));
@@ -83,7 +103,7 @@ namespace G1ANT.Addon.Net.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] telnet {
+        public static byte[] telnet {
             get {
                 object obj = ResourceManager.GetObject("telnet", resourceCulture);
                 return ((byte[])(obj));
@@ -93,7 +113,7 @@ namespace G1ANT.Addon.Net.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] VNC {
+        public static byte[] VNC {
             get {
                 object obj = ResourceManager.GetObject("VNC", resourceCulture);
                 return ((byte[])(obj));
